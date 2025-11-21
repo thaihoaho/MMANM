@@ -1,0 +1,90 @@
+kind: role
+metadata:
+  description: Access cluster resources
+  labels:
+    teleport.internal/resource-type: preset
+  name: access
+  revision: a457fc4a-625c-48bc-a78f-628c28899a9d
+spec:
+  allow:
+    app_labels:
+      '*': '*'
+    aws_role_arns:
+    - '{{internal.aws_role_arns}}'
+    azure_identities:
+    - '{{internal.azure_identities}}'
+    db_labels:
+      '*': '*'
+    db_names:
+    - '{{internal.db_names}}'
+    db_roles:
+    - '{{internal.db_roles}}'
+    db_service_labels:
+      '*': '*'
+    db_users:
+    - '{{internal.db_users}}'
+    gcp_service_accounts:
+    - '{{internal.gcp_service_accounts}}'
+    kubernetes_groups:
+    - '{{internal.kubernetes_groups}}'
+    kubernetes_labels:
+      '*': '*'
+    kubernetes_resources:
+    - kind: '*'
+      name: '*'
+      namespace: '*'
+      verbs:
+      - '*'
+    kubernetes_users:
+    - '{{internal.kubernetes_users}}'
+    logins:
+    - '{{internal.logins}}'
+    node_labels:
+      '*': '*'
+    rules:
+    - resources:
+      - event
+      verbs:
+      - list
+      - read
+    - resources:
+      - session
+      verbs:
+      - read
+      - list
+      where: contains(session.participants, user.metadata.name)
+    - resources:
+      - instance
+      verbs:
+      - list
+      - read
+    - resources:
+      - cluster_maintenance_config
+      verbs:
+      - list
+      - read
+    windows_desktop_labels:
+      '*': '*'
+    windows_desktop_logins:
+    - '{{internal.windows_logins}}'
+  deny: {}
+  options:
+    cert_format: standard
+    create_db_user: false
+    create_desktop_user: false
+    desktop_clipboard: true
+    desktop_directory_sharing: true
+    enhanced_recording:
+    - command
+    - network
+    forward_agent: true
+    idp:
+      saml:
+        enabled: true
+    max_session_ttl: 30h0m0s
+    pin_source_ip: false
+    port_forwarding: true
+    record_session:
+      desktop: true
+    ssh_file_copy: true
+version: v7

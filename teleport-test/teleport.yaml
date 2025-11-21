@@ -1,0 +1,27 @@
+version: v3
+
+teleport:
+  nodename: ThaiHoa-Dell
+  data_dir: /var/lib/teleport
+  log:
+    output: stderr
+    severity: INFO
+
+  auth_server: "127.0.0.1:3025"   
+
+auth_service:
+  enabled: true
+
+proxy_service:
+  enabled: true
+  web_listen_addr: :3080
+  public_addr: localhost:3080
+
+app_service:
+  enabled: true
+  apps:
+    - name: demo-app
+      uri: http://localhost:5173
+      public_addr: demo-app.localhost
+      insecure_skip_verify: true
+
