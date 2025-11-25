@@ -14,10 +14,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -96,6 +98,82 @@ public class AuthController {
                     return ResponseEntity.ok(loginResponse);
                 })
                 .orElseThrow(() -> new com.warehouse.warehousemanager.exception.TokenRefreshException(requestRefreshToken, "Refresh token is not in database!"));
+    }
+
+    @GetMapping("/teleport")
+    public ResponseEntity<Map<String, Object>> getTeleportIdentity() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Map<String, Object> response = new HashMap<>();
+        
+        if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+            // User đã authenticated qua Teleport
+            try {
+                // Lấy user từ database nếu có
+                User user = userService.findByUsername(auth.getName()).orElse(null);
+                
+                if (user != null) {
+                    // User có trong database
+                    Map<String, Object> userMap = new HashMap<>();
+                    userMap.put("id", user.getId());
+                    userMap.put("username", user.getUsername());
+                    userMap.put("role", user.getRole().name());
+                    userMap.put("permissions", user.getPermissions() != null ? user.getPermissions() : java.util.Collections.emptyList());
+                    response.put("user", userMap);
+                } else {
+                    // User không có trong DB, tạo từ Teleport identity
+                    Map<String, Object> userMap = new HashMap<>();
+                    userMap.put("id", 0);
+                    userMap.put("username", auth.getName());
+                    
+                    // Extract role from authorities
+                    String role = "USER";
+                    if (auth.getAuthorities() != null) {
+                        String roleAuthority = auth.getAuthorities().stream()
+                            .map(a -> a.getAuthority())
+                            .filter(a -> a.startsWith("ROLE_"))
+                            .findFirst()
+                            .orElse("ROLE_USER");
+                        role = roleAuthority.replace("ROLE_", "");
+                    }
+                    userMap.put("role", role);
+                    
+                    // Extract permissions from authorities
+                    java.util.List<String> permissions = auth.getAuthorities().stream()
+                        .map(a -> a.getAuthority())
+                        .collect(Collectors.toList());
+                    userMap.put("permissions", permissions);
+                    
+                    response.put("user", userMap);
+                }
+                
+                response.put("authenticated", true);
+            } catch (Exception e) {
+                response.put("authenticated", false);
+                response.put("message", "Error getting user info: " + e.getMessage());
+            }
+        } else {
+            response.put("authenticated", false);
+            response.put("message", "Not authenticated via Teleport");
+        }
+        
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getAuthServiceInfo() {
+        Map<String, Object> response = new HashMap<>();
+        Map<String, String> endpoints = new HashMap<>();
+        endpoints.put("login", "/api/auth/login");
+        endpoints.put("refresh", "/api/auth/refresh");
+        endpoints.put("teleport", "/api/auth/teleport");
+        endpoints.put("register", "/api/auth/register");
+
+        response.put("service", "Warehouse Auth Service");
+        response.put("status", "running");
+        response.put("version", "1.0.0");
+        response.put("endpoints", endpoints);
+
+        return ResponseEntity.ok(response);
     }
 }
 

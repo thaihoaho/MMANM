@@ -1,0 +1,181 @@
+2025-11-24T17:12:41.608-05:00 INFO  Starting Teleport with a config file version:18.3.2 config_file:/home/kali/MMANM/teleport-test/teleport.yaml common/teleport.go:879
+2025-11-24T17:12:42.191-05:00 INFO [PROC:1]    Service is creating new listener. pid:8615.1 type:debug address:/home/kali/teleport-data/debug.sock service/signals.go:242
+2025-11-24T17:12:43.316-05:00 INFO  scoped access cache fetched initial state elapsed:3.880489ms access/access.go:297
+2025-11-24T17:12:43.316-05:00 INFO  scoped access cache successfully initialized access/access.go:304
+2025-11-24T17:12:43.422-05:00 INFO [AUTH:1]    Updating cluster configuration pid:8615.1 static_tokens:StaticTokens([]) trace_id:b02a3974ff8779d88df689b7c5c8a8df span_id:82405dafba988924 auth/init.go:585
+2025-11-24T17:12:43.419-05:00 INFO [AUTH:1]    Updating cluster networking configuration pid:8615.1 networking_config:Kind:"cluster_networking_config" Version:"v2" Metadata:<Name:"cluster-networking-config" Namespace:"default" Labels:<key:"teleport.dev/origin" value:"defaults" > > Spec:<KeepAliveInterval:300000000000 KeepAliveCountMax:3 TunnelStrategy:<AgentMesh:<> > >  trace_id:b02a3974ff8779d88df689b7c5c8a8df span_id:43a2ed85201c1bdd auth/init.go:1148
+2025-11-24T17:12:43.510-05:00 INFO [AUTH:1]    Updating session recording config pid:8615.1 recording_config:Kind:"session_recording_config" Version:"v2" Metadata:<Name:"session-recording-config" Namespace:"default" Labels:<key:"teleport.dev/origin" value:"defaults" > > Spec:<Mode:"node" ProxyChecksHostKeys:"\010\001" >  trace_id:b02a3974ff8779d88df689b7c5c8a8df span_id:53799d2e55b2508c auth/init.go:1188
+2025-11-24T17:12:43.641-05:00 INFO [AUTH:1]    Auth server is running periodic operations pid:8615.1 trace_id:b02a3974ff8779d88df689b7c5c8a8df span_id:82405dafba988924 auth/init.go:691
+2025-11-24T17:12:43.664-05:00 INFO [AUTH:COMP] upload completer starting check_interval:5m0s events/complete.go:179
+2025-11-24T17:12:43.725-05:00 INFO [AUTH:1:CA] Cache first init succeeded target:auth cache/cache.go:943
+2025-11-24T17:12:43.725-05:00 INFO [PROC:1]    Service is creating new listener. pid:8615.1 type:auth address::3025 service/signals.go:242
+2025-11-24T17:12:43.726-05:00 WARN [AUTH:1]    'proxy_protocol' unspecified. Starting Auth service with external PROXY protocol support, but IP pinned connection affected by PROXY headers will not be allowed. Set 'proxy_protocol: on' in 'auth_service' config if Auth service runs behind L4 load balancer with enabled PROXY protocol, or set 'proxy_protocol: off' otherwise pid:8615.1 service/service.go:2605
+2025-11-24T17:12:43.732-05:00 INFO [WORKLOAD_] Starting to generate new CRL workloadidentityv1/revocation_service.go:610
+2025-11-24T17:12:43.751-05:00 INFO [WORKLOAD_] Finished generating new CRL revocations:0 workloadidentityv1/revocation_service.go:662
+2025-11-24T17:12:43.759-05:00 WARN [AUTH:1]    Configuration setting auth_service/advertise_ip is not set, using inferred address pid:8615.1 address:10.0.2.15:3025 service/service.go:2688
+2025-11-24T17:12:43.765-05:00 WARN [PROC:1]    No TLS Keys provided, using self-signed certificate. pid:8615.1 service/service.go:6864
+2025-11-24T17:12:43.767-05:00 INFO [PROC:1]    Got shutdown signal, exiting within timeout. pid:8615.1 signal:terminated timeout:3 service/signals.go:103
+2025-11-24T17:12:43.767-05:00 INFO [AUTH:1]    Auth service is starting. pid:8615.1 version:18.3.2 git_ref:v18.3.2-0-ga5c17d66 listen_address:10.0.2.15:3025 service/service.go:2642
+2025-11-24T17:12:43.771-05:00 INFO [UPLOAD:1]  starting upload completer service pid:8615.1 service/service.go:3699
+2025-11-24T17:12:43.771-05:00 INFO [UPLOAD:1]  Creating directory. pid:8615.1 directory:/home/kali/teleport-data/log service/service.go:3715
+2025-11-24T17:12:43.771-05:00 INFO [UPLOAD:1]  Setting directory owner. pid:8615.1 directory:/home/kali/teleport-data/log uid:1000 gid:4 service/service.go:3722
+2025-11-24T17:12:43.771-05:00 INFO [UPLOAD:1]  Creating directory. pid:8615.1 directory:/home/kali/teleport-data/log/upload service/service.go:3715
+2025-11-24T17:12:43.771-05:00 INFO [UPLOAD:1]  Setting directory owner. pid:8615.1 directory:/home/kali/teleport-data/log/upload uid:1000 gid:4 service/service.go:3722
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Creating directory. pid:8615.1 directory:/home/kali/teleport-data/log/upload/streaming service/service.go:3715
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Setting directory owner. pid:8615.1 directory:/home/kali/teleport-data/log/upload/streaming uid:1000 gid:4 service/service.go:3722
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Creating directory. pid:8615.1 directory:/home/kali/teleport-data/log/upload/streaming/default service/service.go:3715
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Setting directory owner. pid:8615.1 directory:/home/kali/teleport-data/log/upload/streaming/default uid:1000 gid:4 service/service.go:3722
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Creating directory. pid:8615.1 directory:/home/kali/teleport-data/log service/service.go:3715
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Setting directory owner. pid:8615.1 directory:/home/kali/teleport-data/log uid:1000 gid:4 service/service.go:3722
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Creating directory. pid:8615.1 directory:/home/kali/teleport-data/log/upload service/service.go:3715
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Setting directory owner. pid:8615.1 directory:/home/kali/teleport-data/log/upload uid:1000 gid:4 service/service.go:3722
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Creating directory. pid:8615.1 directory:/home/kali/teleport-data/log/upload/corrupted service/service.go:3715
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Setting directory owner. pid:8615.1 directory:/home/kali/teleport-data/log/upload/corrupted uid:1000 gid:4 service/service.go:3722
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Creating directory. pid:8615.1 directory:/home/kali/teleport-data/log/upload/corrupted/default service/service.go:3715
+2025-11-24T17:12:43.772-05:00 INFO [UPLOAD:1]  Setting directory owner. pid:8615.1 directory:/home/kali/teleport-data/log/upload/corrupted/default uid:1000 gid:4 service/service.go:3722
+2025-11-24T17:12:43.774-05:00 INFO [UPLOAD]    uploader server ready scan_dir:/home/kali/teleport-data/log/upload/streaming/default scan_period:5s filesessions/fileasync.go:209
+2025-11-24T17:12:43.775-05:00 INFO [UPLOAD:1:] upload completer starting check_interval:5m0s events/complete.go:179
+2025-11-24T17:12:43.776-05:00 INFO [PROC:1]    Connecting to the cluster with TLS client certificate. pid:8615.1 cluster:ThaiHoa-Dell service/connect.go:240
+2025-11-24T17:12:43.784-05:00 INFO [PROC:1]    Connecting to the cluster with TLS client certificate. pid:8615.1 cluster:ThaiHoa-Dell service/connect.go:240
+2025-11-24T17:12:43.787-05:00 INFO [PROC:1]    Connecting to the cluster with TLS client certificate. pid:8615.1 cluster:ThaiHoa-Dell service/connect.go:240
+2025-11-24T17:12:43.788-05:00 INFO [PROC:1]    Connecting to the cluster with TLS client certificate. pid:8615.1 cluster:ThaiHoa-Dell service/connect.go:240
+2025-11-24T17:12:43.826-05:00 INFO [AUTH:1]    Starting autoupdate_agent_rollout controller pid:8615.1 component:rollout-controller period:1m0s rollout/controller.go:118
+2025-11-24T17:12:43.898-05:00 INFO [AUTH:SPIF] Obtained lock, SPIFFEFederation syncer is starting pid:8615.1 machineidv1/spiffe_federation_syncer.go:219
+2025-11-24T17:12:43.927-05:00 INFO [PROC:1]    features loaded from auth server pid:8615.1 identity:Instance features:Kubernetes:true App:true DB:true Desktop:true DeviceTrust:<> AccessRequests:<> AccessList:<> AccessMonitoring:<> Policy:<> SupportType:SUPPORT_TYPE_FREE JoinActiveSessions:true entitlements:<key:"AccessGraphDemoMode" value:<> > entitlements:<key:"AccessLists" value:<> > entitlements:<key:"AccessMonitoring" value:<> > entitlements:<key:"AccessRequests" value:<> > entitlements:<key:"App" value:<enabled:true > > entitlements:<key:"ClientIPRestrictions" value:<> > entitlements:<key:"CloudAuditLogRetention" value:<> > entitlements:<key:"DB" value:<enabled:true > > entitlements:<key:"Desktop" value:<enabled:true > > entitlements:<key:"DeviceTrust" value:<> > entitlements:<key:"ExternalAuditStorage" value:<> > entitlements:<key:"FeatureHiding" value:<> > entitlements:<key:"HSM" value:<> > entitlements:<key:"Identity" value:<> > entitlements:<key:"JoinActiveSessions" value:<enabled:true > > entitlements:<key:"K8s" value:<enabled:true > > entitlements:<key:"LicenseAutoUpdate" value:<> > entitlements:<key:"MobileDeviceManagement" value:<> > entitlements:<key:"OIDC" value:<> > entitlements:<key:"OktaSCIM" value:<> > entitlements:<key:"OktaUserSync" value:<> > entitlements:<key:"Policy" value:<> > entitlements:<key:"SAML" value:<> > entitlements:<key:"SessionLocks" value:<> > entitlements:<key:"UnrestrictedManagedUpdates" value:<> > entitlements:<key:"UpsellAlert" value:<> > entitlements:<key:"UsageReporting" value:<> >  service/connect.go:1187
+2025-11-24T17:12:43.933-05:00 INFO [INSTANCE:] Successfully registered instance client. pid:8615.1 service/service.go:3222
+2025-11-24T17:12:43.933-05:00 INFO [PROC:1]    Reusing Instance client. pid:8615.1 identity:Proxy additional_system_roles:[Auth Node Proxy App] service/connect.go:1158
+2025-11-24T17:12:43.938-05:00 INFO [PROC:1]    Reusing Instance client. pid:8615.1 identity:App additional_system_roles:[Auth Node Proxy App] service/connect.go:1158
+2025-11-24T17:12:43.943-05:00 INFO [PROC:1]    Reusing Instance client. pid:8615.1 identity:Node additional_system_roles:[Auth Node Proxy App] service/connect.go:1158
+2025-11-24T17:12:43.954-05:00 WARN [DEBUG:1]   Debug server exited with error. pid:8615.1 error:[accept unix /home/kali/teleport-data/debug.sock: use of closed network connection] service/service.go:4075
+2025-11-24T17:12:43.955-05:00 INFO [AUTH:1]    stopping encryption watcher pid:8615.1 error:<nil> recordingencryption/manager.go:607
+2025-11-24T17:12:43.955-05:00 INFO [AUTH:1]    Stopping autoupdate_agent_rollout controller pid:8615.1 component:rollout-controller reason:[context canceled] rollout/controller.go:122
+2025-11-24T17:12:43.955-05:00 WARN [PROC:1]    Teleport process has exited with error pid:8615.1 service:auth.autoupdate_agent_rollout_controller error:[
+ERROR REPORT:
+Original Error: *errors.errorString context canceled
+Stack Trace:
+	github.com/gravitational/teleport/lib/service/service.go:2754 github.com/gravitational/teleport/lib/service.(*TeleportProcess).initAuthService.func7
+	github.com/gravitational/teleport/lib/service/supervisor.go:606 github.com/gravitational/teleport/lib/service.(*LocalService).Serve
+	github.com/gravitational/teleport/lib/service/supervisor.go:329 github.com/gravitational/teleport/lib/service.(*LocalSupervisor).serve.func1
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: running autoupdate_agent_rollout controller
+	context canceled] service/supervisor.go:335
+2025-11-24T17:12:43.956-05:00 INFO [AUTH:SPIF] SPIFFEFederation syncer has stopped pid:8615.1 machineidv1/spiffe_federation_syncer.go:224
+2025-11-24T17:12:43.957-05:00 INFO [DEBUG:1]   Shutting down gracefully. pid:8615.1 service/service.go:4086
+2025-11-24T17:12:43.959-05:00 INFO [DEBUG:1]   Exited. pid:8615.1 service/service.go:4090
+2025-11-24T17:12:43.959-05:00 INFO [UPLOAD:1]  File upload completer is shutting down. pid:8615.1 error:<nil> service/service.go:3789
+2025-11-24T17:12:43.959-05:00 INFO [UPLOAD:1]  File upload completer has shut down. pid:8615.1 service/service.go:3791
+2025-11-24T17:12:43.959-05:00 INFO [UPLOAD:1]  File uploader is shutting down. pid:8615.1 service/service.go:3757
+2025-11-24T17:12:43.959-05:00 INFO [UPLOAD:1]  File uploader has shut down. pid:8615.1 service/service.go:3759
+2025-11-24T17:12:43.959-05:00 INFO [AUTH:1]    Shutting down immediately (auth service does not currently support graceful shutdown). pid:8615.1 service/service.go:2820
+2025-11-24T17:12:43.962-05:00 INFO [AUTH:1]    Exited. pid:8615.1 service/service.go:2835
+2025-11-24T17:12:43.964-05:00 WARN [AUTH:EXPI] error processing access requests pid:8615.1 error:[
+ERROR REPORT:
+Original Error: *errors.errorString context canceled
+Stack Trace:
+	github.com/gravitational/teleport/lib/backend/lite/lite.go:1027 github.com/gravitational/teleport/lib/backend/lite.(*Backend).inTransaction
+	github.com/gravitational/teleport/lib/backend/lite/lite.go:668 github.com/gravitational/teleport/lib/backend/lite.(*Backend).Items.func3
+	github.com/gravitational/teleport/lib/backend/report.go:183 github.com/gravitational/teleport/lib/backend.(*Reporter).Items.func1
+	github.com/gravitational/teleport/lib/services/local/dynamic_access.go:340 github.com/gravitational/teleport/lib/services/local.(*DynamicAccessService).ListAccessRequests
+	github.com/gravitational/teleport/lib/services/expiry/expiry.go:204 github.com/gravitational/teleport/lib/services/expiry.(*Service).getNextPageOfAccessRequests
+	github.com/gravitational/teleport/lib/services/expiry/expiry.go:169 github.com/gravitational/teleport/lib/services/expiry.(*Service).processRequests
+	github.com/gravitational/teleport/lib/services/expiry/expiry.go:146 github.com/gravitational/teleport/lib/services/expiry.(*Service).Run
+	github.com/gravitational/teleport/lib/service/service.go:2780 github.com/gravitational/teleport/lib/service.(*TeleportProcess).initAuthService.func11
+	github.com/gravitational/teleport/lib/service/supervisor.go:606 github.com/gravitational/teleport/lib/service.(*LocalService).Serve
+	github.com/gravitational/teleport/lib/service/supervisor.go:329 github.com/gravitational/teleport/lib/service.(*LocalSupervisor).serve.func1
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: context canceled] expiry/expiry.go:147
+2025-11-24T17:12:43.964-05:00 WARN [AUTH:1]    Mux serve failed error:<nil> auth/middleware.go:329
+2025-11-24T17:12:43.979-05:00 WARN [APP:SERVI] Re-init the cache on error target:apps error:[
+ERROR REPORT:
+Original Error: *trace.ConnectionProblemError watcher is closed: error reading from server: EOF
+Stack Trace:
+	github.com/gravitational/teleport/lib/cache/cache.go:1179 github.com/gravitational/teleport/lib/cache.(*Cache).fetchAndWatch
+	github.com/gravitational/teleport/lib/cache/cache.go:1060 github.com/gravitational/teleport/lib/cache.(*Cache).update
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: watcher is closed: error reading from server: EOF] cache/cache.go:1066
+2025-11-24T17:12:43.979-05:00 WARN [PROXY:1:C] Re-init the cache on error target:proxy error:[
+ERROR REPORT:
+Original Error: *trace.ConnectionProblemError watcher is closed: error reading from server: EOF
+Stack Trace:
+	github.com/gravitational/teleport/lib/cache/cache.go:1179 github.com/gravitational/teleport/lib/cache.(*Cache).fetchAndWatch
+	github.com/gravitational/teleport/lib/cache/cache.go:1060 github.com/gravitational/teleport/lib/cache.(*Cache).update
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: watcher is closed: error reading from server: EOF] cache/cache.go:1066
+2025-11-24T17:12:43.983-05:00 WARN [PROXY:1:C] Cache first init failed, continuing re-init attempts in background target:proxy error:[
+ERROR REPORT:
+Original Error: *trace.ConnectionProblemError watcher is closed: error reading from server: EOF
+Stack Trace:
+	github.com/gravitational/teleport/lib/cache/cache.go:1179 github.com/gravitational/teleport/lib/cache.(*Cache).fetchAndWatch
+	github.com/gravitational/teleport/lib/cache/cache.go:1060 github.com/gravitational/teleport/lib/cache.(*Cache).update
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: watcher is closed: error reading from server: EOF] cache/cache.go:945
+2025-11-24T17:12:43.982-05:00 WARN [APP:SERVI] Cache first init failed, continuing re-init attempts in background target:apps error:[
+ERROR REPORT:
+Original Error: *trace.ConnectionProblemError watcher is closed: error reading from server: EOF
+Stack Trace:
+	github.com/gravitational/teleport/lib/cache/cache.go:1179 github.com/gravitational/teleport/lib/cache.(*Cache).fetchAndWatch
+	github.com/gravitational/teleport/lib/cache/cache.go:1060 github.com/gravitational/teleport/lib/cache.(*Cache).update
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: watcher is closed: error reading from server: EOF] cache/cache.go:945
+2025-11-24T17:12:43.989-05:00 WARN [NODE:1:CA] Re-init the cache on error target:node error:[
+ERROR REPORT:
+Original Error: *interceptors.RemoteError rpc error: code = Unavailable desc = connection error: desc = &#34;transport: Error while dialing: failed to dial: dial tcp 127.0.0.1:3025: connect: connection refused&#34;
+Stack Trace:
+	github.com/gravitational/teleport/api@v0.0.0/client/streamwatcher.go:39 github.com/gravitational/teleport/api/client.(*Client).NewWatcher
+	github.com/gravitational/teleport/lib/cache/cache.go:1139 github.com/gravitational/teleport/lib/cache.(*Cache).fetchAndWatch
+	github.com/gravitational/teleport/lib/cache/cache.go:1060 github.com/gravitational/teleport/lib/cache.(*Cache).update
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: rpc error: code = Unavailable desc = connection error: desc = &#34;transport: Error while dialing: failed to dial: dial tcp 127.0.0.1:3025: connect: connection refused&#34;] cache/cache.go:1066
+2025-11-24T17:12:43.989-05:00 WARN [NODE:1:CA] Cache first init failed, continuing re-init attempts in background target:node error:[
+ERROR REPORT:
+Original Error: *interceptors.RemoteError rpc error: code = Unavailable desc = connection error: desc = &#34;transport: Error while dialing: failed to dial: dial tcp 127.0.0.1:3025: connect: connection refused&#34;
+Stack Trace:
+	github.com/gravitational/teleport/api@v0.0.0/client/streamwatcher.go:39 github.com/gravitational/teleport/api/client.(*Client).NewWatcher
+	github.com/gravitational/teleport/lib/cache/cache.go:1139 github.com/gravitational/teleport/lib/cache.(*Cache).fetchAndWatch
+	github.com/gravitational/teleport/lib/cache/cache.go:1060 github.com/gravitational/teleport/lib/cache.(*Cache).update
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: rpc error: code = Unavailable desc = connection error: desc = &#34;transport: Error while dialing: failed to dial: dial tcp 127.0.0.1:3025: connect: connection refused&#34;] cache/cache.go:945
+2025-11-24T17:12:43.990-05:00 WARN [PROC:1]    Teleport process has exited with error pid:8615.1 service:ssh.node error:[
+ERROR REPORT:
+Original Error: *interceptors.RemoteError connection error: desc = &#34;transport: Error while dialing: failed to dial: dial tcp 127.0.0.1:3025: connect: connection refused&#34;
+Stack Trace:
+	github.com/gravitational/teleport/api@v0.0.0/client/client.go:3022 github.com/gravitational/teleport/api/client.(*Client).GetSessionRecordingConfig
+	github.com/gravitational/teleport/lib/auth/authclient/clt.go:524 github.com/gravitational/teleport/lib/auth/authclient.(*Client).GetSessionRecordingConfig
+	github.com/gravitational/teleport/lib/cache/cluster_config.go:351 github.com/gravitational/teleport/lib/cache.(*Cache).GetSessionRecordingConfig
+	github.com/gravitational/teleport/lib/service/service.go:3267 github.com/gravitational/teleport/lib/service.(*TeleportProcess).initSSH.func1
+	github.com/gravitational/teleport/lib/service/supervisor.go:606 github.com/gravitational/teleport/lib/service.(*LocalService).Serve
+	github.com/gravitational/teleport/lib/service/supervisor.go:329 github.com/gravitational/teleport/lib/service.(*LocalSupervisor).serve.func1
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: connection error: desc = &#34;transport: Error while dialing: failed to dial: dial tcp 127.0.0.1:3025: connect: connection refused&#34;] service/supervisor.go:335
+2025-11-24T17:12:43.990-05:00 WARN [PROC:1]    Teleport process has exited with error pid:8615.1 service:apps.start error:[
+ERROR REPORT:
+Original Error: *interceptors.RemoteError connection error: desc = &#34;transport: Error while dialing: failed to dial: dial tcp 127.0.0.1:3025: connect: connection refused&#34;
+Stack Trace:
+	github.com/gravitational/teleport/api@v0.0.0/client/client.go:2988 github.com/gravitational/teleport/api/client.(*Client).GetClusterNetworkingConfig
+	github.com/gravitational/teleport/lib/auth/authclient/clt.go:519 github.com/gravitational/teleport/lib/auth/authclient.(*Client).GetClusterNetworkingConfig
+	github.com/gravitational/teleport/lib/cache/cluster_config.go:226 github.com/gravitational/teleport/lib/cache.(*Cache).GetClusterNetworkingConfig.func1
+	github.com/gravitational/teleport/lib/utils/fncache.go:241 github.com/gravitational/teleport/lib/utils.FnCacheGetWithTTL[...].func1
+	github.com/gravitational/teleport/lib/utils/fncache.go:313 github.com/gravitational/teleport/lib/utils.(*FnCache).get.func1
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: connection error: desc = &#34;transport: Error while dialing: failed to dial: dial tcp 127.0.0.1:3025: connect: connection refused&#34;] service/supervisor.go:335
+2025-11-24T17:12:43.998-05:00 WARN [PROC:1]    Teleport process has exited with error pid:8615.1 service:proxy.init error:[
+ERROR REPORT:
+Original Error: *interceptors.RemoteError connection error: desc = &#34;transport: Error while dialing: failed to dial: dial tcp 127.0.0.1:3025: connect: connection refused&#34;
+Stack Trace:
+	github.com/gravitational/teleport/api@v0.0.0/client/client.go:2988 github.com/gravitational/teleport/api/client.(*Client).GetClusterNetworkingConfig
+	github.com/gravitational/teleport/lib/auth/authclient/clt.go:519 github.com/gravitational/teleport/lib/auth/authclient.(*Client).GetClusterNetworkingConfig
+	github.com/gravitational/teleport/lib/cache/cluster_config.go:226 github.com/gravitational/teleport/lib/cache.(*Cache).GetClusterNetworkingConfig.func1
+	github.com/gravitational/teleport/lib/utils/fncache.go:241 github.com/gravitational/teleport/lib/utils.FnCacheGetWithTTL[...].func1
+	github.com/gravitational/teleport/lib/utils/fncache.go:313 github.com/gravitational/teleport/lib/utils.(*FnCache).get.func1
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: connection error: desc = &#34;transport: Error while dialing: failed to dial: dial tcp 127.0.0.1:3025: connect: connection refused&#34;] service/supervisor.go:335
+2025-11-24T17:12:44.017-05:00 WARN [AUTH:1:CA] Re-init the cache on error target:auth error:[
+ERROR REPORT:
+Original Error: *trace.ConnectionProblemError watcher is closed: &lt;nil&gt;
+Stack Trace:
+	github.com/gravitational/teleport/lib/cache/cache.go:1282 github.com/gravitational/teleport/lib/cache.(*Cache).fetchAndWatch
+	github.com/gravitational/teleport/lib/cache/cache.go:1060 github.com/gravitational/teleport/lib/cache.(*Cache).update
+	runtime/asm_amd64.s:1700 runtime.goexit
+User Message: watcher is closed: &lt;nil&gt;] cache/cache.go:1066
+2025-11-24T17:12:44.017-05:00 INFO  scoped access cache closing access/access.go:228
+2025-11-24T17:12:44.021-05:00 INFO [PROC:1]    All services stopped or timeout passed, exiting immediately. pid:8615.1 service/signals.go:120

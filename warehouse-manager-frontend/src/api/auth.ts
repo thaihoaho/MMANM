@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:8081';
+import { API_BASE_URL } from '../utils/apiConfig';
 
 export interface LoginCredentials {
   username: string;
@@ -30,4 +29,49 @@ export const refresh = async (refreshToken: string): Promise<AuthResponse> => {
     refreshToken
   });
   return response.data;
+};
+
+export interface TeleportUserResponse {
+  authenticated: boolean;
+  user?: {
+    id: number;
+    username: string;
+    role: string;
+    permissions: string[];
+  };
+  message?: string;
+}
+
+export const getTeleportIdentity = async (): Promise<TeleportUserResponse> => {
+  try {
+    console.log('[Teleport] Checking identity, API_BASE_URL:', API_BASE_URL);
+    // Use withCredentials to ensure cookies are sent if available
+    const response = await axios.get<TeleportUserResponse>(`${API_BASE_URL}/api/auth/teleport`, {
+      withCredentials: true
+    });
+    console.log('[Teleport] Response:', response.data);
+    return response.data;
+  } catch (error: any) {
+    // Log error for debugging
+    console.error('[Teleport] Error checking identity:', error);
+    console.error('[Teleport] Error details:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      url: error.config?.url
+    });
+    // If error, return not authenticated
+    // Check for Network Error (likely CORS on redirect due to missing backend session)
+    if (error.code === 'ERR_NETWORK' && !error.response) {
+      return {
+        authenticated: false,
+        message: 'BACKEND_AUTH_REQUIRED'
+      };
+    }
+
+    return {
+      authenticated: false,
+      message: error.response?.data?.message || error.message || 'Failed to check Teleport identity'
+    };
+  }
 };

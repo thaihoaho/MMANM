@@ -36,7 +36,11 @@ public class PolicyDecisionPoint {
         // Basic role-based rules
         switch (resource) {
             case "users":
-                // Regular users can't manage other users
+                // Regular users can read users list but not modify
+                if (action.equals("read")) {
+                    return true;
+                }
+                // Regular users can't manage other users (create, update, delete)
                 return false;
             case "products":
                 // Both users and admins can manage products
@@ -78,12 +82,15 @@ public class PolicyDecisionPoint {
         int currentHour = request.getHourOfDay();
         // For example, restrict access during night hours for sensitive operations
         boolean timeAccess = true;
+        // Disabled time restriction for testing purposes
+        /*
         if (user.getRole() == User.Role.USER) {
             // Users can't access during night hours (0-6) for sensitive operations
             if (currentHour >= 0 && currentHour < 6) {
                 timeAccess = false;
             }
         }
+        */
         
         // Check risk-based access
         double riskScore = request.getRiskScore();

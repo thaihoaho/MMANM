@@ -1,8 +1,6 @@
 import api from '../utils/axios';
 import { getPolicyContext } from '../utils/policyContext';
 
-const API_BASE_URL = 'http://localhost:8081';
-
 export interface User {
   id: number;
   username: string;
@@ -19,18 +17,18 @@ export interface ApiResponse<T> {
 }
 
 export const getUsers = async (): Promise<User[]> => {
-  const response = await api.get<ApiResponse<User[]>>(`${API_BASE_URL}/api/users`);
+  const response = await api.get<ApiResponse<User[]>>('/api/users');
   return response.data.data;
 };
 
 export const getUserById = async (id: number): Promise<User> => {
-  const response = await api.get<ApiResponse<User>>(`${API_BASE_URL}/api/users/${id}`);
+  const response = await api.get<ApiResponse<User>>(`/api/users/${id}`);
   return response.data.data;
 };
 
 export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
   const context = getPolicyContext();
-  const response = await api.post<ApiResponse<User>>(`${API_BASE_URL}/api/users`, {
+  const response = await api.post<ApiResponse<User>>('/api/users', {
     ...userData,
     context
   });
@@ -39,7 +37,7 @@ export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
 
 export const updateUser = async (id: number, userData: Partial<User>): Promise<User> => {
   const context = getPolicyContext();
-  const response = await api.put<ApiResponse<User>>(`${API_BASE_URL}/api/users/${id}`, {
+  const response = await api.put<ApiResponse<User>>(`/api/users/${id}`, {
     ...userData,
     context
   });
@@ -48,7 +46,7 @@ export const updateUser = async (id: number, userData: Partial<User>): Promise<U
 
 export const deleteUser = async (id: number): Promise<void> => {
   const context = getPolicyContext();
-  await api.delete<ApiResponse<void>>(`${API_BASE_URL}/api/users/${id}`, {
+  await api.delete<ApiResponse<void>>(`/api/users/${id}`, {
     data: { context }
   });
 };
