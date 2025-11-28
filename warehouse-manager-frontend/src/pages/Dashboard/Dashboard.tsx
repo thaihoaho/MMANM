@@ -13,6 +13,7 @@ import { getProducts } from '../../api/products';
 import { getImports } from '../../api/imports';
 import { getExports } from '../../api/exports';
 import { useToast } from '@chakra-ui/react';
+import CertificateStatus from '../../components/CertificateStatus';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -119,6 +120,9 @@ const Dashboard: React.FC = () => {
           <Text>Permissions: <strong>{user?.permissions ? user.permissions.join(', ') : 'N/A'}</strong></Text>
           <Text mt={2}>Zero Trust Architecture: <strong>Enabled</strong></Text>
         </Box>
+
+        {/* Short-lived Credentials / Certificate Rotation Visualization */}
+        <CertificateStatus />
       </VStack>
     </Container>
   );
