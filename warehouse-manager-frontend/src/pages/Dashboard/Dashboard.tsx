@@ -13,6 +13,7 @@ import { getProducts } from '../../api/products';
 import { getImports } from '../../api/imports';
 import { getExports } from '../../api/exports';
 import { useToast } from '@chakra-ui/react';
+import CertificateStatus from '../../components/CertificateStatus';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -31,18 +32,38 @@ const Dashboard: React.FC = () => {
   const fetchStats = async () => {
     try {
       setLoading(true);
-      const [users, products, imports, exports] = await Promise.all([
-        getUsers(),
+      
+      // Only fetch users if user is ADMIN
+      const promises: Promise<any>[] = [
         getProducts(),
         getImports(),
         getExports()
-      ]);
+      ];
+      
+      if (user?.role === 'ADMIN') {
+        promises.unshift(getUsers());
+      } else {
+        promises.unshift(Promise.resolve([])); // Placeholder for users
+      }
+
+      // Use Promise.allSettled to handle partial failures
+      const results = await Promise.allSettled(promises);
+
+      const [usersResult, productsResult, importsResult, exportsResult] = results;
 
       setStats({
-        totalUsers: Array.isArray(users) ? users.length : 0,
-        totalProducts: Array.isArray(products) ? products.length : 0,
-        totalTransactions: (Array.isArray(imports) ? imports.length : 0) + (Array.isArray(exports) ? exports.length : 0),
+        totalUsers: usersResult.status === 'fulfilled' && Array.isArray(usersResult.value) ? usersResult.value.length : 0,
+        totalProducts: productsResult.status === 'fulfilled' && Array.isArray(productsResult.value) ? productsResult.value.length : 0,
+        totalTransactions: (importsResult.status === 'fulfilled' && Array.isArray(importsResult.value) ? importsResult.value.length : 0) + 
+                           (exportsResult.status === 'fulfilled' && Array.isArray(exportsResult.value) ? exportsResult.value.length : 0),
       });
+      
+      // Log errors for debugging
+      if (user?.role === 'ADMIN' && usersResult.status === 'rejected') console.warn('Failed to load users:', usersResult.reason);
+      if (productsResult.status === 'rejected') console.warn('Failed to load products:', productsResult.reason);
+      if (importsResult.status === 'rejected') console.warn('Failed to load imports:', importsResult.reason);
+      if (exportsResult.status === 'rejected') console.warn('Failed to load exports:', exportsResult.reason);
+
     } catch (error: any) {
       toast({
         title: 'Error loading dashboard stats',
@@ -71,12 +92,14 @@ const Dashboard: React.FC = () => {
 
         <Text>Welcome back, <strong>{user?.username}</strong>!</Text>
 
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
-          <Box p={6} bg="white" rounded="md" boxShadow="md" borderLeft="4px" borderLeftColor="blue.500">
-            <Text fontSize="lg" fontWeight="bold" color="gray.700">Total Users</Text>
-            <Text fontSize="2xl" fontWeight="bold" color="blue.600">{stats.totalUsers}</Text>
-            <Text fontSize="sm" color="gray.500">Manage user accounts</Text>
-          </Box>
+        <SimpleGrid columns={{ base: 1, md: user?.role === 'ADMIN' ? 3 : 2 }} spacing={6}>
+          {user?.role === 'ADMIN' && (
+            <Box p={6} bg="white" rounded="md" boxShadow="md" borderLeft="4px" borderLeftColor="blue.500">
+              <Text fontSize="lg" fontWeight="bold" color="gray.700">Total Users</Text>
+              <Text fontSize="2xl" fontWeight="bold" color="blue.600">{stats.totalUsers}</Text>
+              <Text fontSize="sm" color="gray.500">Manage user accounts</Text>
+            </Box>
+          )}
 
           <Box p={6} bg="white" rounded="md" boxShadow="md" borderLeft="4px" borderLeftColor="green.500">
             <Text fontSize="lg" fontWeight="bold" color="gray.700">Products</Text>
@@ -97,6 +120,9 @@ const Dashboard: React.FC = () => {
           <Text>Permissions: <strong>{user?.permissions ? user.permissions.join(', ') : 'N/A'}</strong></Text>
           <Text mt={2}>Zero Trust Architecture: <strong>Enabled</strong></Text>
         </Box>
+
+        {/* Short-lived Credentials / Certificate Rotation Visualization */}
+        <CertificateStatus />
       </VStack>
     </Container>
   );

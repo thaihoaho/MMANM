@@ -1,10 +1,7 @@
 kind: role
+version: v7
 metadata:
-  description: Access cluster resources
-  labels:
-    teleport.internal/resource-type: preset
   name: access
-  revision: a457fc4a-625c-48bc-a78f-628c28899a9d
 spec:
   allow:
     app_labels:
@@ -43,6 +40,13 @@ spec:
       '*': '*'
     rules:
     - resources:
+      - app
+      verbs:
+      - '*'
+      - list
+      - read
+      - use
+    - resources:
       - event
       verbs:
       - list
@@ -60,6 +64,11 @@ spec:
       - read
     - resources:
       - cluster_maintenance_config
+      verbs:
+      - list
+      - read
+    - resources:
+      - user_group
       verbs:
       - list
       - read
@@ -87,4 +96,3 @@ spec:
     record_session:
       desktop: true
     ssh_file_copy: true
-version: v7

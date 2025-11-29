@@ -2,7 +2,7 @@ version: v3
 
 teleport:
   nodename: ThaiHoa-Dell
-  data_dir: /var/lib/teleport
+  data_dir: /home/kali/teleport-data
   log:
     output: stderr
     severity: INFO
@@ -11,17 +11,33 @@ teleport:
 
 auth_service:
   enabled: true
+  listen_addr: 0.0.0.0:3025
 
 proxy_service:
   enabled: true
-  web_listen_addr: :3080
+  web_listen_addr: 0.0.0.0:3080
   public_addr: localhost:3080
+  listen_addr: 0.0.0.0:3023  
+  tunnel_listen_addr: 0.0.0.0:3024
 
 app_service:
   enabled: true
   apps:
-    - name: demo-app
-      uri: http://localhost:5173
-      public_addr: demo-app.localhost
+    - name: warehouse-frontend
+      uri: http://[::1]:3000
+      public_addr: warehouse-frontend.localhost
       insecure_skip_verify: true
-
+      rewrite:
+        headers:
+          - "Host: localhost:3000"
+    - name: warehouse-backend
+      uri: http://127.0.0.1:8081
+      public_addr: warehouse-backend.localhost
+      insecure_skip_verify: true
+      rewrite:
+        headers:
+          - "Host: localhost:8081"
+      # Explicitly set that this is an API service, not a static app
+      labels:
+        env: development
+        service: api
