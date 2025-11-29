@@ -5,6 +5,7 @@ import com.warehouse.warehousemanager.dto.ProductDto;
 import com.warehouse.warehousemanager.entity.Product;
 import com.warehouse.warehousemanager.security.policy.PolicyEnforcementPoint;
 import com.warehouse.warehousemanager.service.ProductService;
+import com.warehouse.warehousemanager.service.TrustLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,9 @@ public class ProductController {
 
     @Autowired
     private PolicyEnforcementPoint policyEnforcementPoint;
+
+    @Autowired
+    private TrustLogService trustLogService;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProductDto>>> getAllProducts(HttpServletRequest request) {
@@ -46,7 +50,7 @@ public class ProductController {
 
         Product product = productService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-        
+
         ProductDto productDto = new ProductDto(product.getId(), product.getName(), product.getQuantity(), product.getLocation());
         return ResponseEntity.ok(ApiResponse.success("Product retrieved successfully", productDto));
     }

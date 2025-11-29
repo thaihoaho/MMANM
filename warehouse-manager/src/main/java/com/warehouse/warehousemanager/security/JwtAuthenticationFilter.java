@@ -28,17 +28,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        System.out.println("JwtAuthenticationFilter processing request: " + request.getRequestURI() +
+                          " with method: " + request.getMethod());
+
+        String authHeader = request.getHeader("Authorization");
+        System.out.println("JwtAuthenticationFilter: Authorization header value: " + authHeader);
+
         String token = extractTokenFromRequest(request);
+        System.out.println("JwtAuthenticationFilter: Extracted token: " + token);
 
         if (token != null && jwtUtil.validateToken(token)) {
             String username = jwtUtil.getUsernameFromToken(token);
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            UsernamePasswordAuthenticationToken authentication = 
+            UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("JwtAuthenticationFilter: Authenticated user " + username);
+        } else {
+            System.out.println("JwtAuthenticationFilter: No valid token found for " + request.getRequestURI());
+            if (token != null) {
+                System.out.println("JwtAuthenticationFilter: Token was found but validation failed");
+            } else {
+                System.out.println("JwtAuthenticationFilter: No token found in request");
+            }
         }
 
         filterChain.doFilter(request, response);

@@ -248,4 +248,5 @@ const ADMIN_NAV_ITEMS: Array<NavItem> = [
   { label: 'Products', href: '/products' },
   { label: 'Imports', href: '/imports' },
   { label: 'Exports', href: '/exports' },
+  { label: 'Trust Logs', href: '/trust-logs' },
 ];

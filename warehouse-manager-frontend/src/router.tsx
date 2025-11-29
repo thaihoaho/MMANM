@@ -6,6 +6,7 @@ import Users from './pages/Users/Users';
 import Products from './pages/Products/Products';
 import Imports from './pages/Imports/Imports';
 import Exports from './pages/Exports/Exports';
+import TrustLogs from './pages/TrustLogs/TrustLogs';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 const router = createBrowserRouter([
@@ -62,6 +63,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Exports />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/trust-logs',
+        element: (
+          <ProtectedRoute requiredRole="ADMIN">
+            <TrustLogs />
           </ProtectedRoute>
         ),
       },

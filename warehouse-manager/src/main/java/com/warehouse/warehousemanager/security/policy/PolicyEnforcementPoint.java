@@ -29,11 +29,18 @@ public class PolicyEnforcementPoint {
 
         String username = authentication.getName();
 
-        // Load thông tin user từ database thông qua service để lấy entity User
-        com.warehouse.warehousemanager.entity.User user =
-            userService.findByUsername(username).orElse(null);
+        com.warehouse.warehousemanager.entity.User user = null;
+        try {
+            // Load thông tin user từ database thông qua service để lấy entity User
+            user = userService.findByUsername(username).orElse(null);
+        } catch (Exception e) {
+            System.err.println("Error looking up user for policy evaluation: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
 
         if (user == null) {
+            System.err.println("User not found in database: " + username);
             return false;
         }
 
@@ -43,32 +50,35 @@ public class PolicyEnforcementPoint {
         policyRequest.setResource(resource);
         policyRequest.setAction(action);
         policyRequest.setRequest(request);
-        
+
         // Extract context information
         policyRequest.setIpAddress(request.getRemoteAddr());
-        
+
         // Get current hour of day
         java.time.LocalTime now = java.time.LocalTime.now();
         policyRequest.setHourOfDay(now.getHour());
-        
+
         // Mock risk score (in a real system, this would come from a risk assessment service)
         policyRequest.setRiskScore(calculateRiskScore(request, user));
 
         // Evaluate the policy
-        return policyDecisionPoint.evaluate(policyRequest);
+        boolean decision = policyDecisionPoint.evaluate(policyRequest);
+
+        // The decision is already logged in the PolicyDecisionPoint
+        return decision;
     }
 
     private double calculateRiskScore(HttpServletRequest request, User user) {
         // This is a simplified risk calculation
         // In a real system, this would be much more complex
         double score = 0.0;
-        
+
         // Example factors that could increase risk
         // - New device/IP
         // - Unusual time
         // - Suspicious patterns
         // - etc.
-        
+
         // For now, returning a static score
         return 0.1; // Low risk by default
     }
