@@ -76,15 +76,18 @@ public class PolicyEnforcementPoint {
         String clientIP = request.getRemoteAddr();
         if (clientIP.equals("127.0.0.1") || clientIP.equals("0:0:0:0:0:0:0:1")) {
             score -= 0.1; // Reduce risk for localhost
+            System.err.println("Access from localhost detected, reducing risk score.");
         }
 
         // Check for suspicious IP patterns (high risk)
         if (clientIP.startsWith("192.168.") || clientIP.startsWith("10.") || clientIP.startsWith("172.")) {
             // Internal IP ranges - moderate risk depending on context
             score += 0.1;
+            System.err.println("Access from internal IP range detected, increasing risk score.");
         } else if (clientIP.contains(":") && !clientIP.startsWith("fe80")) {
             // IPv6 address (not link-local) - might be legitimate or suspicious
             score += 0.05;
+            System.err.println("Access from IPv6 address detected, slightly increasing risk score.");
         }
 
         // Check time-based risk (access during unusual hours)
@@ -92,29 +95,36 @@ public class PolicyEnforcementPoint {
         int hour = now.getHour();
         if (hour < 6 || hour > 22) { // Between 10 PM and 6 AM
             score += 0.2; // Higher risk during nighttime hours
+            System.err.println("Access during unusual hours detected, increasing risk score.");
         }
 
         // Check user role-based risk
         if (user.getRole() == User.Role.USER) {
             score += 0.1; // Regular users have slightly higher risk than admin
+            System.err.println("User role is USER, increasing risk score.");
         } else if (user.getRole() == User.Role.ADMIN) {
             score += 0.05; // Admins have power, so slightly higher risk
+            System.err.println("User role is ADMIN, slightly increasing risk score.");
         }
 
         // Check for sensitive resource access
         String requestURI = request.getRequestURI();
         if (requestURI.contains("/users") || requestURI.contains("/admin")) {
             score += 0.3; // Higher risk for sensitive operations
+            System.err.println("Accessing sensitive resource detected, increasing risk score.");
         } else if (requestURI.contains("/products") || requestURI.contains("/imports") || requestURI.contains("/exports")) {
             score += 0.15; // Medium risk for warehouse operations
+            System.err.println("Accessing warehouse resource detected, moderately increasing risk score.");
         }
 
         // Check HTTP method risk
         String method = request.getMethod();
         if ("DELETE".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method)) {
             score += 0.2; // Higher risk for destructive operations
+            System.err.println("Destructive HTTP method detected, increasing risk score.");
         } else if ("POST".equalsIgnoreCase(method)) {
             score += 0.1; // Medium risk for create operations
+            System.err.println("Create HTTP method detected, moderately increasing risk score.");
         }
 
         // Apply boundaries to ensure score stays within 0.0 - 1.0

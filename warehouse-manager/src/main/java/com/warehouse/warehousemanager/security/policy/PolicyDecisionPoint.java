@@ -34,12 +34,12 @@ public class PolicyDecisionPoint {
         boolean permissionBasedAccess = checkPermissionBasedAccess(user, resource, action);
         System.out.println("Permission-based access result: " + permissionBasedAccess);
 
-        // Check context-based access (location, time, risk)
-        boolean contextBasedAccess = checkContextBasedAccess(request);
-        System.out.println("Context-based access result: " + contextBasedAccess);
+        // Check risk-based access
+        boolean riskBasedAccess = checkRiskScore(request);
+        System.out.println("Risk-based access result: " + riskBasedAccess);
 
         // All checks must pass for access to be granted
-        boolean decisionResult = roleBasedAccess && permissionBasedAccess && contextBasedAccess;
+        boolean decisionResult = roleBasedAccess && permissionBasedAccess && riskBasedAccess;
         System.out.println("Overall decision result: " + decisionResult);
 
         // Log the trust decision - wrap in try-catch to prevent logging issues from affecting access decisions
@@ -112,40 +112,12 @@ public class PolicyDecisionPoint {
         return true;
     }
 
-    private boolean checkContextBasedAccess(PolicyRequest request) {
-        User user = request.getUser();
-        String resource = request.getResource();
-        String action = request.getAction();
-
-        System.out.println("Checking context-based access for user: " + user.getUsername() +
-                          ", role: " + user.getRole() + ", resource: " + resource + ", action: " + action);
-
-        // Check location-based access (IP address)
-        String userIpAddress = request.getIpAddress();
-        // For now, we allow access from any IP, but this could be restricted
-        boolean locationAccess = true;
-        System.out.println("Location access granted: " + locationAccess);
-
-        // Check time-based access
-        int currentHour = request.getHourOfDay();
-        // For example, restrict access during night hours for sensitive operations
-        boolean timeAccess = true;
-        if (user.getRole() == User.Role.USER) {
-            // Users can't access during night hours (0-6) for sensitive operations
-            if (currentHour >= 0 && currentHour < 6) {
-                timeAccess = false;
-            }
-        }
-        System.out.println("Time access for user role " + user.getRole() + " at hour " + currentHour + ": " + timeAccess);
-
-        // Check risk-based access
+    private boolean checkRiskScore(PolicyRequest request) {
         double riskScore = request.getRiskScore();
         // If risk score is too high, deny access
         boolean riskAccess = riskScore < 0.8; // Threshold can be adjusted
-        System.out.println("Risk access for score " + riskScore + " (threshold < 0.8): " + riskAccess);
-
-        boolean result = locationAccess && timeAccess && riskAccess;
-        System.out.println("Context-based access result: " + result);
+        System.out.println("Risk score: " + riskScore + ", risk-based access result: " + riskAccess);
+        boolean result = riskAccess;
         return result;
     }
 
