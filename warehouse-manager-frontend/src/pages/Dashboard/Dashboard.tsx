@@ -117,7 +117,7 @@ const Dashboard: React.FC = () => {
         <Box p={6} bg="white" rounded="md" boxShadow="md">
           <Heading size="md" mb={4}>System Information</Heading>
           <Text>Role: <strong>{user?.role || 'N/A'}</strong></Text>
-          <Text>Permissions: <strong>{user?.permissions ? user.permissions.join(', ') : 'N/A'}</strong></Text>
+          <Text>Permissions: <strong>{user?.role == "ADMIN" ? "Full" : (user?.permissions ? user.permissions.join(', ') : 'N/A')}</strong></Text>
           <Text mt={2}>Zero Trust Architecture: <strong>Enabled</strong></Text>
         </Box>
 

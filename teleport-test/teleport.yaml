@@ -24,7 +24,7 @@ app_service:
   enabled: true
   apps:
     - name: warehouse-frontend
-      uri: http://[::1]:3000
+      uri: http://localhost:3000
       public_addr: warehouse-frontend.localhost
       insecure_skip_verify: true
       rewrite:
