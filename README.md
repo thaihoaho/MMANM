@@ -10,13 +10,13 @@ A security-focused warehouse management application implementing Zero Trust Arch
 - [Security Features](#security-features)
 - [Core Spring Security Modules](#core-spring-security-modules)
 - [Zero Trust Specific Components](#zero-trust-specific-components)
-- [Authentication & Authorization](#authentication--authorization)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
-- [Development](#development)
-- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
 
 ## Architecture Overview
 
@@ -219,40 +219,6 @@ This modular approach allows the system to handle both traditional authenticatio
 
 ![Interaction Diagram](Images/interaction.jpg)
 
-## Authentication & Authorization
-
-### Authentication Flow
-
-1. User submits credentials to `/api/auth/login`
-2. Authentication manager validates credentials
-3. JWT token is generated with appropriate claims
-4. Refresh token is created for session management
-5. User context is established in security context
-6. Policy enforcement begins for subsequent requests
-
-### JWT Token Structure
-- **Subject**: Username
-- **Issued At**: Token creation time
-- **Expiration**: Configurable token lifetime
-- **Signature**: HS512 algorithm with secure secret key
-
-### Token Management
-- **Access Tokens**: Short-lived JWT tokens (1 hour default)
-- **Refresh Tokens**: Longer-lived tokens (7 days default) for secure session renewal
-- **Automatic Refresh**: Frontend automatically refreshes expired access tokens
-- **Secure Storage**: Tokens stored securely in browser storage with appropriate security measures
-
-### Security Headers
-- CORS configured for cross-origin requests
-- CSRF protection enabled
-- Content Security Policy (CSP) headers
-- HTTP Strict Transport Security (HSTS)
-
-### Password Security
-- Passwords are hashed using BCrypt algorithm
-- Configurable work factor for password hashing
-- Automatic salting for password security
-
 ## Installation
 
 ### Prerequisites
@@ -369,64 +335,6 @@ Security is implemented in multiple layers:
 - `POST /api/imports` - Create new import
 - `GET /api/exports` - Get all exports
 - `POST /api/exports` - Create new export
-
-## Development
-
-### Backend Development
-- Use your preferred Java IDE (IntelliJ IDEA, Eclipse, VS Code)
-- Code generation with MapStruct
-- Lombok for reducing boilerplate code
-- Maven for dependency management
-
-### Frontend Development
-- TypeScript for type-safe development
-- React hooks for state management
-- Zustand for global state
-- Chakra UI for consistent design system
-- Vite for fast development builds
-
-### Security Testing
-- Unit tests for security components
-- Integration tests for authentication flows
-- Policy evaluation testing
-- Access control validation
-
-## Testing
-
-### Backend Tests
-```bash
-cd warehouse-manager
-mvn test
-```
-
-### Frontend Tests
-```bash
-cd warehouse-manager-frontend
-npm test
-```
-
-### Security Testing Considerations
-- Penetration testing for authentication bypass
-- JWT token validation and expiration testing
-- Authorization logic validation
-- Input validation and injection prevention
-- Session management testing
-
-## Deployment
-
-### Production Configuration
-- Secure JWT secret keys
-- Proper HTTPS configuration
-- Database security hardening
-- Firewall and network security
-- Monitoring and logging
-
-### Security Best Practices
-- Regular security audits and updates
-- Vulnerability scanning
-- Proper access logging
-- Incident response procedures
-- Regular backup and recovery testing
 
 ## Contributing
 
