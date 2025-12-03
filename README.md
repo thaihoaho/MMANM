@@ -9,10 +9,8 @@ A security-focused warehouse management application implementing Zero Trust Arch
 - [Proposed Model Architecture](#proposed-model-architecture)
 - [Security Features](#security-features)
 - [Core Spring Security Modules](#core-spring-security-modules)
-- [Security Architecture](#security-architecture)
-  - [Zero Trust Policy Engine](#zero-trust-policy-engine)
-  - [Access Control Logic](#access-control-logic)
-  - [Authentication & Authorization](#authentication--authorization)
+- [Zero Trust Specific Components](#zero-trust-specific-components)
+- [Authentication & Authorization](#authentication--authorization)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
@@ -202,10 +200,13 @@ The multi-layer arrangement ensures that even when identity has been verified by
 - `CorsConfigurationSource`: Defines CORS rules for frontend integration
 - Cross-origin handling: Configured to work with development and production frontends
 
-### Zero Trust Specific Components:
+## Zero Trust Specific Components
 
 The application implements a Zero Trust Architecture with these specialized modules:
 
+- **Policy Request (PolicyRequest)**: Encapsulates user information, resource being accessed, action being performed, and context information (IP address, time of day, risk score) needed for policy decisions
+- **Policy Decision Point (PDP)**: Evaluates access requests using multiple factors including role-based access control (RBAC), permission-based access control, and context-aware access control (time, location, risk)
+- **Policy Enforcement Point (PEP)**: Runtime access enforcement that integrates with Spring Security framework and intercepts HTTP requests for validation
 - Identity Verification: Both Teleport-based and traditional JWT authentication
 - Continuous Validation: Policy decisions made on each request
 - Context-Aware Access Control: Considers time, location, device, and risk factors
@@ -214,46 +215,13 @@ The application implements a Zero Trust Architecture with these specialized modu
 
 This modular approach allows the system to handle both traditional authentication (JWT-based) and advanced Teleport-based authentication while maintaining strong security controls through the zero-trust framework. Each module plays a specific role in the overall security architecture, working together to implement the principle of "never trust, always verify".
 
-## Security Architecture
+![System Flow](Images/flow.jpg)
 
-### Zero Trust Policy Engine
+![Interaction Diagram](Images/interaction.jpg)
 
-The system implements a sophisticated policy engine with three main components:
+## Authentication & Authorization
 
-1. **Policy Request (PolicyRequest)**:
-   - User information
-   - Resource being accessed
-   - Action being performed
-   - Context information (IP address, time of day, risk score)
-
-2. **Policy Decision Point (PDP)**:
-   - Role-based access control (RBAC)
-   - Permission-based access control
-   - Context-aware access control (time, location, risk)
-   - Multi-factor decision logic
-
-3. **Policy Enforcement Point (PEP)**:
-   - Runtime access enforcement
-   - Integration with Spring Security framework
-   - HTTP request interception and validation
-
-### Access Control Logic
-
-#### Role-Based Access Control
-- **Admin users** can access all system resources
-- **Regular users** have limited access based on configured permissions
-
-#### Context-Aware Access
-- Time-based restrictions (e.g., users restricted during night hours)
-- Location-based access (IP address validation)
-- Risk-based scoring for access decisions
-
-#### Permission-Based Access
-- Fine-grained permissions in the format `resource:action`
-- Dynamic permission management
-- Inheritance and delegation mechanisms
-
-#### Authentication Flow
+### Authentication Flow
 
 1. User submits credentials to `/api/auth/login`
 2. Authentication manager validates credentials
@@ -262,35 +230,28 @@ The system implements a sophisticated policy engine with three main components:
 5. User context is established in security context
 6. Policy enforcement begins for subsequent requests
 
-#### Token Management
-
-- **Access Tokens**: Short-lived JWT tokens (1 hour default)
-- **Refresh Tokens**: Longer-lived tokens (7 days default) for secure session renewal
-- **Automatic Refresh**: Frontend automatically refreshes expired access tokens
-- **Secure Storage**: Tokens stored securely in browser storage with appropriate security measures
-
-### Authentication & Authorization
-
-#### JWT Token Structure
+### JWT Token Structure
 - **Subject**: Username
 - **Issued At**: Token creation time
 - **Expiration**: Configurable token lifetime
 - **Signature**: HS512 algorithm with secure secret key
 
-#### Security Headers
+### Token Management
+- **Access Tokens**: Short-lived JWT tokens (1 hour default)
+- **Refresh Tokens**: Longer-lived tokens (7 days default) for secure session renewal
+- **Automatic Refresh**: Frontend automatically refreshes expired access tokens
+- **Secure Storage**: Tokens stored securely in browser storage with appropriate security measures
+
+### Security Headers
 - CORS configured for cross-origin requests
 - CSRF protection enabled
 - Content Security Policy (CSP) headers
 - HTTP Strict Transport Security (HSTS)
 
-#### Password Security
+### Password Security
 - Passwords are hashed using BCrypt algorithm
 - Configurable work factor for password hashing
 - Automatic salting for password security
-
-![System Flow](Images/flow.jpg)
-
-![Interaction Diagram](Images/interaction.jpg)
 
 ## Installation
 
