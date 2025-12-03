@@ -4,17 +4,17 @@ A security-focused warehouse management application implementing Zero Trust Arch
 
 ## Table of Contents
 - [Architecture Overview](#architecture-overview)
-- [Security Features](#security-features)
 - [Technology Stack](#technology-stack)
 - [Project Structure](#project-structure)
-- [Core Spring Security Modules](#core-spring-security-modules)
 - [Proposed Model Architecture](#proposed-model-architecture)
+- [Security Features](#security-features)
+- [Core Spring Security Modules](#core-spring-security-modules)
+- [Security Architecture](#security-architecture)
+- [Authentication & Authorization](#authentication--authorization)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
-- [Security Architecture](#security-architecture)
-- [Authentication & Authorization](#authentication--authorization)
 - [Development](#development)
 - [Testing](#testing)
 
@@ -25,27 +25,6 @@ The system follows a microservice architecture with:
 - **Frontend UI**: React TypeScript application with role-based access controls
 - **Database**: SQLite for data persistence
 - **Security Gateway**: Teleport for infrastructure access control
-
-## Security Features
-
-### Zero Trust Architecture (ZTA)
-- **Never trust, always verify**: All requests must be authenticated and authorized
-- **Least privilege**: Access is granted based on minimum required permissions
-- **Assume breach**: Network is always treated as hostile
-
-### Multi-layered Security
-- **JWT-based Authentication**: Secure token-based authentication with refresh tokens
-- **Role-Based Access Control (RBAC)**: Fine-grained permissions based on user roles
-- **Context-Aware Access Control**: Time, location, and risk-based access decisions
-- **Policy Decision Point (PDP)**: Centralized access control logic
-- **Policy Enforcement Point (PEP)**: Runtime access enforcement
-
-### Advanced Security Controls
-- **Session Management**: Secure JWT tokens with configurable expiration
-- **Password Hashing**: BCrypt for secure password storage
-- **CORS Configuration**: Proper cross-origin resource sharing
-- **CSRF Protection**: State management protection
-- **SQL Injection Prevention**: ORM-based data access
 
 ## Technology Stack
 
@@ -92,6 +71,10 @@ MMANM/
 │   │   │   └── resources/
 │   │   │       └── application.properties
 │   └── pom.xml
+├── Images/                 # Images directory
+│   ├── flow.jpg            # System flow diagram
+│   ├── interaction.jpg     # Interaction diagram
+│   └── network.jpg         # Network architecture diagram
 └── warehouse-manager-frontend/  # Frontend React application
     ├── src/
     │   ├── api/            # API service functions
@@ -102,6 +85,75 @@ MMANM/
     ├── package.json
     └── vite.config.ts
 ```
+
+## Proposed Model Architecture
+
+### Overall Architecture
+
+The proposed model implements a Zero Trust Architecture based on three layers of protection: the user layer, the access gateway layer, and the internal application layer. All access requests must pass through the gateway before reaching the application, ensuring centralized control and eliminating assumptions about internal trusted zones, consistent with the Zero Trust definition in NIST SP 800-207 (NIST, 2020).
+
+The access flow includes three phases: (1) users send requests from the Internet environment; (2) the Zero Trust gateway authenticates identity, establishes access sessions, and attaches identification information to the request; (3) the internal application enforces detailed access policies based on roles and business rules.
+
+In the reference system, Teleport is deployed as an identity-aware proxy, forwarding identity information through fields such as X-Forwarded-User, X-Forwarded-Groups, and JWT assertions before requests are transferred to the backend.
+
+### User Security Layer -- Gateway -> Teleport
+
+The first layer is responsible for verifying identity and establishing valid access sessions. Teleport authenticates users through mechanisms such as SSO/OIDC or internal accounts while issuing short-term certificates to minimize the risk of credential exposure.
+
+Key functions at this layer include:
+- Identity authentication and access session establishment;
+- Linking identity with device and access context;
+- Issuing temporary certificates for the session;
+- Recording initial access events for auditing.
+
+The gateway eliminates invalid requests before they reach the application. Once a session is verified, Teleport attaches identification information to the request following the identity-aware proxy model, ensuring the backend only processes requests with valid identity. This reflects the operational mechanism described in the internal report.
+
+### Gateway Security Layer -- Application -> Teleport
+
+This layer remains under Teleport's control. After successful authentication, Teleport continues to maintain its role as an intermediary protector before requests enter the internal system. Key tasks include:
+- Checking the validity of access sessions throughout request processing;
+- Ensuring every request includes standardized identity information;
+- Forwarding identification fields such as X-Teleport-User, X-Forwarded-Email, X-Forwarded-Groups, and JWT assertions;
+- Recording access session logs and audit events at the gateway.
+
+At this layer, Teleport serves as a "trust broker," responsible for maintaining and enforcing the initial trust for each request. This is an important distinction from the application layer, where access control is based only on identity verified by Teleport. This forwarding and identity maintenance mechanism is detailed in the internal report.
+
+### Internal Application Security Layer
+
+The final layer belongs to the internal application where detailed access control policies are enforced. The application does not authenticate identity from scratch but uses identification information provided by Teleport to determine user roles and permissions.
+
+At this layer, Spring Security serves as the access control platform, implementing:
+- Role-based access control (RBAC) and action-based permissions;
+- API protection using filter chains and method or resource-level delegation mechanisms;
+- Business logic control to prevent unauthorized access;
+- Access decision logging for monitoring and analysis.
+
+In the reference model, the backend Spring Boot application uses resource and action-based authorization mechanisms combined with an access decision logging system (TrustLog) to support auditing and security monitoring.
+
+The multi-layer arrangement ensures that even when identity has been verified by Teleport, users can only perform operations appropriate to their role, adhering to the Zero Trust principle of "least privilege."
+
+![Network map](Images/network.jpg)
+
+## Security Features
+
+### Zero Trust Architecture (ZTA)
+- **Never trust, always verify**: All requests must be authenticated and authorized
+- **Least privilege**: Access is granted based on minimum required permissions
+- **Assume breach**: Network is always treated as hostile
+
+### Multi-layered Security
+- **JWT-based Authentication**: Secure token-based authentication with refresh tokens
+- **Role-Based Access Control (RBAC)**: Fine-grained permissions based on user roles
+- **Context-Aware Access Control**: Time, location, and risk-based access decisions
+- **Policy Decision Point (PDP)**: Centralized access control logic
+- **Policy Enforcement Point (PEP)**: Runtime access enforcement
+
+### Advanced Security Controls
+- **Session Management**: Secure JWT tokens with configurable expiration
+- **Password Hashing**: BCrypt for secure password storage
+- **CORS Configuration**: Proper cross-origin resource sharing
+- **CSRF Protection**: State management protection
+- **SQL Injection Prevention**: ORM-based data access
 
 ## Core Spring Security Modules
 
@@ -160,53 +212,79 @@ The application implements a Zero Trust Architecture with these specialized modu
 
 This modular approach allows the system to handle both traditional authentication (JWT-based) and advanced Teleport-based authentication while maintaining strong security controls through the zero-trust framework. Each module plays a specific role in the overall security architecture, working together to implement the principle of "never trust, always verify".
 
-## Proposed Model Architecture
+## Security Architecture
 
-### Overall Architecture
+### Zero Trust Policy Engine
 
-The proposed model implements a Zero Trust Architecture based on three layers of protection: the user layer, the access gateway layer, and the internal application layer. All access requests must pass through the gateway before reaching the application, ensuring centralized control and eliminating assumptions about internal trusted zones, consistent with the Zero Trust definition in NIST SP 800-207 (NIST, 2020).
+The system implements a sophisticated policy engine with three main components:
 
-The access flow includes three phases: (1) users send requests from the Internet environment; (2) the Zero Trust gateway authenticates identity, establishes access sessions, and attaches identification information to the request; (3) the internal application enforces detailed access policies based on roles and business rules.
+1. **Policy Request (PolicyRequest)**:
+   - User information
+   - Resource being accessed
+   - Action being performed
+   - Context information (IP address, time of day, risk score)
 
-In the reference system, Teleport is deployed as an identity-aware proxy, forwarding identity information through fields such as X-Forwarded-User, X-Forwarded-Groups, and JWT assertions before requests are transferred to the backend.
+2. **Policy Decision Point (PDP)**:
+   - Role-based access control (RBAC)
+   - Permission-based access control
+   - Context-aware access control (time, location, risk)
+   - Multi-factor decision logic
 
-### User Security Layer -- Gateway -> Teleport
+3. **Policy Enforcement Point (PEP)**:
+   - Runtime access enforcement
+   - Integration with Spring Security framework
+   - HTTP request interception and validation
 
-The first layer is responsible for verifying identity and establishing valid access sessions. Teleport authenticates users through mechanisms such as SSO/OIDC or internal accounts while issuing short-term certificates to minimize the risk of credential exposure.
+### Access Control Logic
 
-Key functions at this layer include:
-- Identity authentication and access session establishment;
-- Linking identity with device and access context;
-- Issuing temporary certificates for the session;
-- Recording initial access events for auditing.
+#### Role-Based Access Control
+- **Admin users** can access all system resources
+- **Regular users** have limited access based on configured permissions
 
-The gateway eliminates invalid requests before they reach the application. Once a session is verified, Teleport attaches identification information to the request following the identity-aware proxy model, ensuring the backend only processes requests with valid identity. This reflects the operational mechanism described in the internal report.
+#### Context-Aware Access
+- Time-based restrictions (e.g., users restricted during night hours)
+- Location-based access (IP address validation)
+- Risk-based scoring for access decisions
 
-### Gateway Security Layer -- Application -> Teleport
+#### Permission-Based Access
+- Fine-grained permissions in the format `resource:action`
+- Dynamic permission management
+- Inheritance and delegation mechanisms
 
-This layer remains under Teleport's control. After successful authentication, Teleport continues to maintain its role as an intermediary protector before requests enter the internal system. Key tasks include:
-- Checking the validity of access sessions throughout request processing;
-- Ensuring every request includes standardized identity information;
-- Forwarding identification fields such as X-Teleport-User, X-Forwarded-Email, X-Forwarded-Groups, and JWT assertions;
-- Recording access session logs and audit events at the gateway.
+### Authentication Flow
 
-At this layer, Teleport serves as a "trust broker," responsible for maintaining and enforcing the initial trust for each request. This is an important distinction from the application layer, where access control is based only on identity verified by Teleport. This forwarding and identity maintenance mechanism is detailed in the internal report.
+1. User submits credentials to `/api/auth/login`
+2. Authentication manager validates credentials
+3. JWT token is generated with appropriate claims
+4. Refresh token is created for session management
+5. User context is established in security context
+6. Policy enforcement begins for subsequent requests
 
-### Internal Application Security Layer
+### Token Management
 
-The final layer belongs to the internal application where detailed access control policies are enforced. The application does not authenticate identity from scratch but uses identification information provided by Teleport to determine user roles and permissions.
+- **Access Tokens**: Short-lived JWT tokens (1 hour default)
+- **Refresh Tokens**: Longer-lived tokens (7 days default) for secure session renewal
+- **Automatic Refresh**: Frontend automatically refreshes expired access tokens
+- **Secure Storage**: Tokens stored securely in browser storage with appropriate security measures
 
-At this layer, Spring Security serves as the access control platform, implementing:
-- Role-based access control (RBAC) and action-based permissions;
-- API protection using filter chains and method or resource-level delegation mechanisms;
-- Business logic control to prevent unauthorized access;
-- Access decision logging for monitoring and analysis.
+## Authentication & Authorization
 
-In the reference model, the backend Spring Boot application uses resource and action-based authorization mechanisms combined with an access decision logging system (TrustLog) to support auditing and security monitoring.
+### JWT Token Structure
+- **Subject**: Username
+- **Issued At**: Token creation time
+- **Expiration**: Configurable token lifetime
+- **Signature**: HS512 algorithm with secure secret key
 
-The multi-layer arrangement ensures that even when identity has been verified by Teleport, users can only perform operations appropriate to their role, adhering to the Zero Trust principle of "least privilege."
+### Security Headers
+- CORS configured for cross-origin requests
+- CSRF protection enabled
+- Content Security Policy (CSP) headers
+- HTTP Strict Transport Security (HSTS)
 
-![Network map](Images/network_map.jpg)
+### Password Security
+- Passwords are hashed using BCrypt algorithm
+- Configurable work factor for password hashing
+- Automatic salting for password security
 
 ## Installation
 
@@ -324,80 +402,6 @@ Security is implemented in multiple layers:
 - `POST /api/imports` - Create new import
 - `GET /api/exports` - Get all exports
 - `POST /api/exports` - Create new export
-
-## Security Architecture
-
-### Zero Trust Policy Engine
-
-The system implements a sophisticated policy engine with three main components:
-
-1. **Policy Request (PolicyRequest)**:
-   - User information
-   - Resource being accessed
-   - Action being performed
-   - Context information (IP address, time of day, risk score)
-
-2. **Policy Decision Point (PDP)**:
-   - Role-based access control (RBAC)
-   - Permission-based access control
-   - Context-aware access control (time, location, risk)
-   - Multi-factor decision logic
-
-3. **Policy Enforcement Point (PEP)**:
-   - Runtime access enforcement
-   - Integration with Spring Security framework
-   - HTTP request interception and validation
-
-### Access Control Logic
-
-#### Role-Based Access Control
-- **Admin users** can access all system resources
-- **Regular users** have limited access based on configured permissions
-
-#### Context-Aware Access
-- Time-based restrictions (e.g., users restricted during night hours)
-- Location-based access (IP address validation)
-- Risk-based scoring for access decisions
-
-#### Permission-Based Access
-- Fine-grained permissions in the format `resource:action`
-- Dynamic permission management
-- Inheritance and delegation mechanisms
-
-### Authentication Flow
-
-1. User submits credentials to `/api/auth/login`
-2. Authentication manager validates credentials
-3. JWT token is generated with appropriate claims
-4. Refresh token is created for session management
-5. User context is established in security context
-6. Policy enforcement begins for subsequent requests
-
-### Token Management
-
-- **Access Tokens**: Short-lived JWT tokens (1 hour default)
-- **Refresh Tokens**: Longer-lived tokens (7 days default) for secure session renewal
-- **Automatic Refresh**: Frontend automatically refreshes expired access tokens
-- **Secure Storage**: Tokens stored securely in browser storage with appropriate security measures
-
-## Authentication & Authorization
-
-### JWT Token Structure
-- **Subject**: Username
-- **Issued At**: Token creation time
-- **Expiration**: Configurable token lifetime
-- **Signature**: HS512 algorithm with secure secret key
-
-### Security Headers
-- CORS configured for cross-origin requests
-- CSRF protection enabled
-- Content Security Policy (CSP) headers
-- HTTP Strict Transport Security (HSTS)
-
-### Password Security
-- Passwords are hashed using BCrypt algorithm
-- Configurable work factor for password hashing
-- Automatic salting for password security
 
 ## Development
 
