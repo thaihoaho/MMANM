@@ -10,7 +10,9 @@ A security-focused warehouse management application implementing Zero Trust Arch
 - [Security Features](#security-features)
 - [Core Spring Security Modules](#core-spring-security-modules)
 - [Security Architecture](#security-architecture)
-- [Authentication & Authorization](#authentication--authorization)
+  - [Zero Trust Policy Engine](#zero-trust-policy-engine)
+  - [Access Control Logic](#access-control-logic)
+  - [Authentication & Authorization](#authentication--authorization)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
@@ -251,7 +253,7 @@ The system implements a sophisticated policy engine with three main components:
 - Dynamic permission management
 - Inheritance and delegation mechanisms
 
-### Authentication Flow
+#### Authentication Flow
 
 1. User submits credentials to `/api/auth/login`
 2. Authentication manager validates credentials
@@ -260,31 +262,35 @@ The system implements a sophisticated policy engine with three main components:
 5. User context is established in security context
 6. Policy enforcement begins for subsequent requests
 
-### Token Management
+#### Token Management
 
 - **Access Tokens**: Short-lived JWT tokens (1 hour default)
 - **Refresh Tokens**: Longer-lived tokens (7 days default) for secure session renewal
 - **Automatic Refresh**: Frontend automatically refreshes expired access tokens
 - **Secure Storage**: Tokens stored securely in browser storage with appropriate security measures
 
-## Authentication & Authorization
+### Authentication & Authorization
 
-### JWT Token Structure
+#### JWT Token Structure
 - **Subject**: Username
 - **Issued At**: Token creation time
 - **Expiration**: Configurable token lifetime
 - **Signature**: HS512 algorithm with secure secret key
 
-### Security Headers
+#### Security Headers
 - CORS configured for cross-origin requests
 - CSRF protection enabled
 - Content Security Policy (CSP) headers
 - HTTP Strict Transport Security (HSTS)
 
-### Password Security
+#### Password Security
 - Passwords are hashed using BCrypt algorithm
 - Configurable work factor for password hashing
 - Automatic salting for password security
+
+![System Flow](Images/flow.jpg)
+
+![Interaction Diagram](Images/interaction.jpg)
 
 ## Installation
 
